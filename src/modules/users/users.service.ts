@@ -14,6 +14,7 @@ import { In, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { USER_ERRORS } from '../../shared/helpers/responses/errors/user-errors.helpers';
 import { AuthService } from '../auth/auth.service';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Injectable()
 export class UsersService {
@@ -37,13 +38,11 @@ export class UsersService {
     });
   }
 
-  async signIn(authDto: CreateUserDto): Promise<{ access_token: string }> {
+  async signIn(authDto: SignInDto): Promise<{ access_token: string }> {
     return this.authService.signIn(authDto);
   }
   async create(createUserDto: CreateUserDto) {
-    const userAlreadyExist = await this.findOneByUsername(
-      createUserDto.username,
-    );
+    const userAlreadyExist = await this.findOneByUsername(createUserDto.email);
 
     if (userAlreadyExist) {
       throw new BadRequestException(USER_ERRORS.userAlreadyExist);
@@ -61,13 +60,13 @@ export class UsersService {
 
   async findOneById(id: string) {
     return this.userRepository.findOne({
-      where: [{ id }, { username: id }],
+      where: [{ id }, { email: id }],
     });
   }
 
-  async findOneByUsername(username: string) {
+  async findOneByUsername(email: string) {
     return this.userRepository.findOne({
-      where: { username },
+      where: { email },
       withDeleted: true,
     });
   }

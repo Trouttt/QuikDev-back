@@ -27,6 +27,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+import { SignInDto } from './dto/sign-in.dto';
 
 @ApiTags('Users')
 @ApiBadRequestResponse({ description: 'Bad Request' })
@@ -51,9 +52,9 @@ export class UsersController {
   @ApiOperation({
     summary: 'Auth user endpoint',
   })
-  @ApiCreatedResponse({ description: 'Created', type: User })
+  @ApiOkResponse({ description: 'Sign in', type: User })
   @Post('auth')
-  signIn(@Body() body: CreateUserDto): Promise<{ access_token: string }> {
+  signIn(@Body() body: SignInDto): Promise<{ access_token: string }> {
     return this.usersService.signIn(body);
   }
   //@UseGuards(JwtAuthGuard)

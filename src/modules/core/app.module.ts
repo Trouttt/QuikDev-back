@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from 'src/shared/typeorm/config/typeorm-config.service';
 import { AuthModule } from '../auth/auth.module';
-import { TasksModule } from '../tasks/tasks.module';
+import { PostsModule } from '../posts/posts.module';
 import { UsersModule } from '../users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,7 +15,7 @@ import { AppService } from './app.service';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
-    TasksModule,
+    PostsModule,
     AuthModule,
     UsersModule,
   ],

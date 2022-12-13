@@ -1,6 +1,3 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsString } from 'class-validator';
-import { User } from '../../../modules/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,12 +5,16 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { User } from 'src/modules/users/entities/user.entity';
 
-@Entity({ name: 'tasks' })
-export class Task {
+@Entity({ name: 'posts' })
+export class Post {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,17 +27,12 @@ export class Task {
   user: User;
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   @Column()
-  name: string;
+  title: string;
 
-  @ApiProperty({ default: 'PROGRESS' })
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['PROGRESS', 'FINISHED'])
+  @ApiProperty()
   @Column()
-  status: string;
+  description: string;
 
   @ApiPropertyOptional()
   @CreateDateColumn({ name: 'created_at' })

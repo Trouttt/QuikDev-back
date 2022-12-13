@@ -14,6 +14,8 @@ import { User } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { AUTH_ERRORS } from '../../shared/helpers/responses/errors/auth-errors.helpers';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { SignInDto } from '../users/dto/sign-in.dto';
+import { jwtConstants } from 'src/shared/constants/jwt-secret';
 
 @Injectable()
 export class AuthService {
@@ -24,16 +26,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) { }
 
-  async signIn(user: CreateUserDto) {
+  async signIn(user: SignInDto) {
     const verifyIfUserIsValid = await this.validateUser(
-      user.username,
+      user.email,
       user.password,
     );
 
     if (verifyIfUserIsValid) {
       const payload = {
         id: verifyIfUserIsValid.id,
-        username: user.username,
+        email: user.email,
         sub: verifyIfUserIsValid.id,
       };
       return {
@@ -58,5 +60,14 @@ export class AuthService {
     const { password: passwordd, ...result } = user;
 
     return result;
+  }
+
+  async decodeTokenToGetUserId(token: string): Promise<string> {
+    const authorization: string = token.split(' ')[1];
+    const user_id: string = this.jwtService.verify(authorization, {
+      secret: jwtConstants.secret,
+    }).id;
+
+    return user_id;
   }
 }

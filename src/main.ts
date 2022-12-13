@@ -13,10 +13,10 @@ async function bootstrap() {
   const config = new Swagger();
 
   config.configSwagger(
-    'COOPERS back teste',
-    'teste prático da COOPERS',
+    'QUIKDEV back teste',
+    'teste prático da QUIKDEV',
     '1.0',
-    'COOPERS',
+    'QUIKDEV',
     app,
   );
 
