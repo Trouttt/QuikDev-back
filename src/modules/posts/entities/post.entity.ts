@@ -11,20 +11,20 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { User } from 'src/modules/users/entities/user.entity';
+import { UserEntity } from 'src/modules/users/entities/user.entity';
 
 @Entity({ name: 'posts' })
-export class Post {
+export class PostEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ type: () => User })
-  @ManyToOne(() => User, (user) => user.id, {
+  @ApiProperty({ type: () => UserEntity })
+  @ManyToOne(() => UserEntity, (user) => user.id, {
     cascade: false,
     eager: true,
   })
   @JoinColumn({ name: 'user', referencedColumnName: 'id' })
-  user: User;
+  user: UserEntity;
 
   @ApiProperty()
   @Column()

@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 
 import {
   ApiBadRequestResponse,
@@ -43,16 +43,16 @@ export class UsersController {
     summary: 'Create user',
     description: 'Create User endpoint. Create a new user',
   })
-  @ApiCreatedResponse({ description: 'Created', type: User })
+  @ApiCreatedResponse({ description: 'Created', type: UserEntity })
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.usersService.create(createUserDto);
   }
 
   @ApiOperation({
     summary: 'Auth user endpoint',
   })
-  @ApiOkResponse({ description: 'Sign in', type: User })
+  @ApiOkResponse({ description: 'Sign in', type: UserEntity })
   @Post('auth')
   signIn(@Body() body: SignInDto): Promise<{ access_token: string }> {
     return this.usersService.signIn(body);

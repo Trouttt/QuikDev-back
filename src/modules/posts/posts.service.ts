@@ -1,19 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { POST_ERRORS } from 'src/shared/helpers/responses/errors/post-errors.helpers';
 import { USER_ERRORS } from 'src/shared/helpers/responses/errors/user-errors.helpers';
+import { POST_SUCESSFULL } from 'src/shared/helpers/responses/successfuls/post-successfuls.helpers';
 import { Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
-import { User } from '../users/entities/user.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
+import { PostEntity } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
+    @InjectRepository(PostEntity)
+    private readonly postRepository: Repository<PostEntity>,
 
     private readonly authService: AuthService,
 
@@ -23,32 +29,70 @@ export class PostsService {
     const user_id: string = await this.authService.decodeTokenToGetUserId(
       token,
     );
-    const user: User = await this.userService.findOneById(user_id);
+    const user: UserEntity = await this.userService.findOneById(user_id);
 
     if (!user) {
       throw new NotFoundException(USER_ERRORS.userDoesntExistWithThisId);
     }
 
-    const post = this.postRepository.create(createPostDto);
+    const post: PostEntity = this.postRepository.create(createPostDto);
 
     post.user = user;
 
     return this.postRepository.save(post);
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll() {
+    return this.postRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    return this.postRepository.findOne({ relations: ['user'], where: { id } });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(
+    id: string,
+    updatePostDto: UpdatePostDto,
+    token: string,
+  ): Promise<PostEntity> {
+    const post: PostEntity = await this.findOne(id);
+
+    if (!post) {
+      throw new NotFoundException(
+        `${POST_ERRORS.postDoesntExistWithThisId} ${id}`,
+      );
+    }
+
+    const user_id = await this.authService.decodeTokenToGetUserId(token);
+
+    if (post.user.id !== user_id) {
+      throw new BadRequestException(
+        POST_ERRORS.postDoenstUpdateWithDifferentUser,
+      );
+    }
+
+    return this.postRepository.save({ ...post, ...updatePostDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string, token: string): Promise<{ message: string }> {
+    const post: PostEntity = await this.findOne(id);
+
+    if (!post) {
+      throw new NotFoundException(
+        `${POST_ERRORS.postDoesntExistWithThisId} ${id}`,
+      );
+    }
+
+    const user_id = await this.authService.decodeTokenToGetUserId(token);
+
+    if (post.user.id !== user_id) {
+      throw new BadRequestException(
+        POST_ERRORS.postDoenstDeleteWithDifferentUser,
+      );
+    }
+
+    await this.postRepository.softRemove(post);
+
+    return { message: POST_SUCESSFULL.postRemovedWithSuccessful };
   }
 }

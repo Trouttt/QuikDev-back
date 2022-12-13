@@ -9,7 +9,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { In, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { USER_ERRORS } from '../../shared/helpers/responses/errors/user-errors.helpers';
@@ -20,8 +20,8 @@ import { SignInDto } from './dto/sign-in.dto';
 export class UsersService {
   private readonly salt: string;
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
 
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
