@@ -88,4 +88,14 @@ export class PostsController {
       req.headers.authorization,
     );
   }
+
+  @ApiOperation({
+    summary: 'delete post',
+    description: 'Delete post endpoint. delete one post on the system.',
+  })
+  @ApiOkResponse({ description: 'Deleted' })
+  @Delete(':id')
+  remove(@Param('id') id: string, @Req() req): Promise<{ message: string }> {
+    return this.postsService.remove(id, req.headers.authorization);
+  }
 }
