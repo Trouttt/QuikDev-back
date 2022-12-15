@@ -14,23 +14,17 @@ export class ReportsService {
     private readonly reportRepository: Repository<ReportEntity>,
   ) { }
   async getReport() {
-    let query = await this.reportRepository.manager.query(
+    const query = await this.reportRepository.manager.query(
       `SELECT Posts.title, COUNT(Comments.id) FROM Comments LEFT JOIN Posts ON Comments.Post = Posts.id WHERE Comments.deleted_at IS NULL GROUP BY Posts.title`,
     );
-    /*Tive que fazer essa manipulação, pois a tabela 
-    dessa lib só aceita rows do tipo [['string', 'string], ['string, 'string]]*/
-    query = query.map((data) => {
-      const row: Array<string> = [];
-      for (const property in data) {
-        row.push(data[property]);
-      }
-      return row;
-    });
 
     const table = {
       title: 'Relatório das postagens',
-      headers: ['titulo', 'quantidade de comentários'],
-      rows: query,
+      headers: [
+        { label: 'titulo', property: 'title' },
+        { label: 'quantidade de comentários', property: 'count' },
+      ],
+      datas: query,
     };
     const pdfBuffer: Buffer = await new Promise(async (resolve) => {
       const doc = new PDFDocument({ margin: 30, size: 'A4' });
