@@ -6,6 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { AwsS3Module } from '../aws-s3/aws-s3.module';
 import { CommentsModule } from '../comment/comments.module';
 import { PostsModule } from '../posts/posts.module';
+import { ReportsModule } from '../reports/reports.module';
 import { UsersModule } from '../users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,6 +20,7 @@ import { AppService } from './app.service';
     }),
     PostsModule,
     CommentsModule,
+    ReportsModule,
     AwsS3Module,
     AuthModule,
     UsersModule,
