@@ -7,7 +7,7 @@ import { PostEntity } from './entities/post.entity';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostEntity]), AuthModule, UsersModule],
+  imports: [TypeOrmModule.forFeature([PostEntity]), UsersModule],
   controllers: [PostsController],
   providers: [PostsService],
   exports: [PostsService],

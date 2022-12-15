@@ -43,7 +43,7 @@ export class PostsController {
 
   @ApiOperation({
     summary: 'Create post',
-    description: 'Create User endpoint. Create a new post',
+    description: 'Create post endpoint. Create a new post',
   })
   @ApiCreatedResponse({ description: 'Created', type: PostEntity })
   @Post()

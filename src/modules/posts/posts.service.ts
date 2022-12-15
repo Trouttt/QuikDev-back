@@ -21,12 +21,10 @@ export class PostsService {
     @InjectRepository(PostEntity)
     private readonly postRepository: Repository<PostEntity>,
 
-    private readonly authService: AuthService,
-
     private readonly userService: UsersService,
   ) { }
   async create(token: string, createPostDto: CreatePostDto) {
-    const user_id: string = await this.authService.decodeTokenToGetUserId(
+    const user_id: string = await this.userService.decodeTokenToGetUserId(
       token,
     );
     const user: UserEntity = await this.userService.findOneById(user_id);
@@ -63,7 +61,7 @@ export class PostsService {
       );
     }
 
-    const user_id = await this.authService.decodeTokenToGetUserId(token);
+    const user_id = await this.userService.decodeTokenToGetUserId(token);
 
     if (post.user.id !== user_id) {
       throw new BadRequestException(
@@ -83,7 +81,7 @@ export class PostsService {
       );
     }
 
-    const user_id = await this.authService.decodeTokenToGetUserId(token);
+    const user_id = await this.userService.decodeTokenToGetUserId(token);
 
     if (post.user.id !== user_id) {
       throw new BadRequestException(

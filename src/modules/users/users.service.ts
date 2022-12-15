@@ -5,6 +5,7 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,6 +16,8 @@ import { ConfigService } from '@nestjs/config';
 import { USER_ERRORS } from '../../shared/helpers/responses/errors/user-errors.helpers';
 import { AuthService } from '../auth/auth.service';
 import { SignInDto } from './dto/sign-in.dto';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from 'src/shared/constants/jwt-secret';
 
 @Injectable()
 export class UsersService {
@@ -26,17 +29,8 @@ export class UsersService {
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
-    private readonly configService: ConfigService<
-      {
-        SECURITY_SALT: string;
-      },
-      true
-    >,
-  ) {
-    this.salt = configService.get<string>('SECURITY_SALT', {
-      infer: true,
-    });
-  }
+    private jwtService: JwtService,
+  ) { }
 
   async signIn(authDto: SignInDto): Promise<{ access_token: string }> {
     return this.authService.signIn(authDto);
@@ -69,5 +63,28 @@ export class UsersService {
       where: { email },
       withDeleted: true,
     });
+  }
+
+  async decodeTokenToGetUserId(token: string): Promise<string> {
+    const authorization: string = token.split(' ')[1];
+    const user_id: string = this.jwtService.verify(authorization, {
+      secret: jwtConstants.secret,
+    }).id;
+
+    return user_id;
+  }
+
+  async verifyIfUserExist(token: string): Promise<UserEntity | null> {
+    console.log('entrou aqui mano');
+    console.log(token);
+
+    const user_id: string = await this.decodeTokenToGetUserId(token);
+    const user: UserEntity = await this.findOneById(user_id);
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
 }
