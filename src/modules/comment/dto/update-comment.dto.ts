@@ -1,5 +1,5 @@
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 import { CreateCommentDto } from './create-comment.dto';
 
 export class UpdateCommentDto {
