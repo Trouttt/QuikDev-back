@@ -17,5 +17,6 @@ export class UpdateCommentDto {
   })
   @IsString()
   @IsOptional()
+  @MinLength(3)
   description: string;
 }
