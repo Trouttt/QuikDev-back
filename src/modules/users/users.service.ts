@@ -36,7 +36,7 @@ export class UsersService {
     return this.authService.signIn(authDto);
   }
   async create(createUserDto: CreateUserDto) {
-    const userAlreadyExist = await this.findOneByUsername(createUserDto.email);
+    const userAlreadyExist = await this.findOneByEmail(createUserDto.email);
 
     if (userAlreadyExist) {
       throw new BadRequestException(USER_ERRORS.userAlreadyExist);
@@ -52,13 +52,34 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findOneById(id);
+
+    if (!user) {
+      throw new BadRequestException(USER_ERRORS.userDoesntExistWithThisId);
+    }
+
+    const emailAlreadyInUse = await this.findOneByEmail(updateUserDto.email);
+
+    if (emailAlreadyInUse) {
+      throw new BadRequestException(USER_ERRORS.emailAlreadyExist);
+    }
+
+    const salt = await bcrypt.genSalt(10);
+
+    const hash = await bcrypt.hash(updateUserDto.password, salt);
+
+    updateUserDto.password = hash;
+    return this.userRepository.save({ ...user, ...updateUserDto });
+  }
+
   async findOneById(id: string) {
     return this.userRepository.findOne({
       where: [{ id }, { email: id }],
     });
   }
 
-  async findOneByUsername(email: string) {
+  async findOneByEmail(email: string) {
     return this.userRepository.findOne({
       where: { email },
       withDeleted: true,
@@ -75,9 +96,6 @@ export class UsersService {
   }
 
   async verifyIfUserExist(token: string): Promise<UserEntity | null> {
-    console.log('entrou aqui mano');
-    console.log(token);
-
     const user_id: string = await this.decodeTokenToGetUserId(token);
     const user: UserEntity = await this.findOneById(user_id);
 

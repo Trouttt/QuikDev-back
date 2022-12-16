@@ -1,5 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsObject, IsString, IsUUID } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -16,4 +22,9 @@ export class CreatePostDto {
   })
   @IsString()
   description: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  image_path?: string;
 }

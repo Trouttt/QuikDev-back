@@ -24,7 +24,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @ApiForbiddenResponse({ description: 'Forbidden' })
 @ApiUnprocessableEntityResponse({ description: 'Unprocessable Entity' })
 @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-@Controller('Aws-s3')
+@Controller('aws-s3')
 export class AwsS3Controller {
   constructor(private readonly awsS3Service: AwsS3Service) { }
 
@@ -38,7 +38,7 @@ export class AwsS3Controller {
     @Body()
     generateMediaS3: GenerateUrlDTO,
   ) {
-    const { image_name, folder_name } = generateMediaS3;
-    return this.awsS3Service.createMediaS3(image_name, folder_name);
+    const { folder_name } = generateMediaS3;
+    return this.awsS3Service.createMediaS3(folder_name);
   }
 }

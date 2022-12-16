@@ -45,8 +45,8 @@ export class AuthService {
     throw new BadRequestException(AUTH_ERRORS.userDoesntExist);
   }
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.userService.findOneByUsername(username);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       throw new BadRequestException(AUTH_ERRORS.userDoesntExist);

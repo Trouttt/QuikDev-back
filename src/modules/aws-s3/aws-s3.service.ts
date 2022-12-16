@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AwsS3Service {
@@ -36,10 +37,9 @@ export class AwsS3Service {
     });
   }
 
-  async createMediaS3(image_name: string, folder_name: string): Promise<any> {
+  async createMediaS3(folder_name: string): Promise<any> {
     const timestamp = Date.now();
-
-    const key = `${this.publicDirectoryName}/${folder_name}/${timestamp}/${image_name}`;
+    const key = `${this.publicDirectoryName}/${folder_name}/${timestamp}.png`;
     const s3Params = {
       Bucket: this.bucketName,
       Key: key,
@@ -51,8 +51,6 @@ export class AwsS3Service {
         uploadUrl,
         key,
       };
-
-      console.log(this.s3.getSignedUrl('getObject', s3Params));
     } catch (error) {
       error.customDescription =
         'This error is related to AWS S3 image upload in quikdev-back';

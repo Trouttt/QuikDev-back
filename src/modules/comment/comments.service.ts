@@ -101,13 +101,6 @@ export class CommentsService {
     if (!comment) {
       throw new NotFoundException(COMMENT_ERRORS.commentDoesntExistWithThisId);
     }
-    console.log(user.id, 'usuário');
-    console.log(comment.user.id, 'dono do comentário');
-    console.log(comment.post.user.id, 'dono da postagem');
-    console.log(
-      user.id !== comment.user.id && user.id !== comment.post.user.id,
-      'validação',
-    );
 
     if (user.id !== comment.user.id && user.id !== comment.post.user.id) {
       throw new BadRequestException(

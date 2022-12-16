@@ -15,7 +15,7 @@ export class ReportsService {
   ) { }
   async getReport() {
     const query = await this.reportRepository.manager.query(
-      `SELECT Posts.title, COUNT(Comments.id) FROM Comments LEFT JOIN Posts ON Comments.Post = Posts.id WHERE Comments.deleted_at IS NULL GROUP BY Posts.title`,
+      `SELECT Posts.title, COUNT(Comments.id) FROM Posts LEFT JOIN Comments ON Comments.Post = Posts.id WHERE Comments.deleted_at IS NULL GROUP BY Posts.title`,
     );
 
     const table = {
@@ -30,6 +30,7 @@ export class ReportsService {
       const doc = new PDFDocument({ margin: 30, size: 'A4' });
 
       await doc.table(table, {});
+
       const buffer = [];
       doc.on('data', buffer.push.bind(buffer));
       doc.on('end', () => {

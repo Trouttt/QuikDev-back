@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserEntity } from 'src/modules/users/entities/user.entity';
+import { CommentEntity } from 'src/modules/comment/entities/comment.entity';
 
 @Entity({ name: 'posts' })
 export class PostEntity {
@@ -26,6 +27,11 @@ export class PostEntity {
   @JoinColumn({ name: 'user', referencedColumnName: 'id' })
   user: UserEntity;
 
+  @OneToMany(() => CommentEntity, (comment) => comment.post, {
+    cascade: true,
+  })
+  comment: CommentEntity[];
+
   @ApiProperty()
   @Column()
   title: string;
@@ -33,6 +39,10 @@ export class PostEntity {
   @ApiProperty()
   @Column()
   description: string;
+
+  @ApiPropertyOptional()
+  @Column({ nullable: true })
+  image_path?: string;
 
   @ApiPropertyOptional()
   @CreateDateColumn({ name: 'created_at' })

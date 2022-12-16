@@ -20,4 +20,9 @@ export class UpdatePostDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  image_path?: string;
 }

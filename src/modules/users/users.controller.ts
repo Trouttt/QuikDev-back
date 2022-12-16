@@ -50,6 +50,29 @@ export class UsersController {
   }
 
   @ApiOperation({
+    summary: 'Find user',
+    description: 'Find User endpoint. Find a user',
+  })
+  @ApiCreatedResponse({ description: 'Created', type: UserEntity })
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<UserEntity> {
+    return this.usersService.findOneById(id);
+  }
+
+  @ApiOperation({
+    summary: 'update user',
+    description: 'Update user endpoint. Update one user on the system.',
+  })
+  @ApiOkResponse({ description: 'Updated', type: UserEntity })
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    return this.usersService.update(id, updatePostDto);
+  }
+
+  @ApiOperation({
     summary: 'Auth user endpoint',
   })
   @ApiOkResponse({ description: 'Sign in', type: UserEntity })

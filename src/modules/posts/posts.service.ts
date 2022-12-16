@@ -41,7 +41,7 @@ export class PostsService {
   }
 
   async findAll() {
-    return this.postRepository.find();
+    return this.postRepository.find({ relations: ['user', 'comment'] });
   }
 
   async findOne(id: string) {

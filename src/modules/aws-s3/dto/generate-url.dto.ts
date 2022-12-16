@@ -5,14 +5,6 @@ export class GenerateUrlDTO {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    example: 'Arroz doce',
-    description: 'name of file',
-  })
-  image_name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
     example: 'Foods',
     description: 'folder of file',
   })
