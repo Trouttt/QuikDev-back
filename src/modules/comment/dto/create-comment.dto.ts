@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsObject, IsString, IsUUID } from 'class-validator';
+import {
+  IsArray,
+  IsObject,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
 
 export class CreateCommentDto {
   @ApiProperty({
@@ -14,5 +20,6 @@ export class CreateCommentDto {
     example: 'yeah man, i agree with everthing you have said',
   })
   @IsString()
+  @MinLength(3)
   description: string;
 }

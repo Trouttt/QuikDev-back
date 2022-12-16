@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString, MinLength } from 'class-validator';
 import { PostEntity } from '../entities/post.entity';
 import { CreatePostDto } from './create-post.dto';
 
@@ -10,6 +10,7 @@ export class UpdatePostDto {
   })
   @IsString()
   @IsOptional()
+  @MinLength(3)
   title?: string;
 
   @ApiPropertyOptional({
@@ -19,6 +20,7 @@ export class UpdatePostDto {
   })
   @IsString()
   @IsOptional()
+  @MinLength(3)
   description?: string;
 
   @ApiPropertyOptional()

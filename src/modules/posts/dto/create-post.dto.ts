@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  MinLength,
 } from 'class-validator';
 
 export class CreatePostDto {
@@ -13,6 +14,7 @@ export class CreatePostDto {
     example: 'soda makes you sick?',
   })
   @IsString()
+  @MinLength(3)
   title: string;
 
   @ApiProperty({
@@ -21,6 +23,7 @@ export class CreatePostDto {
       "i've heard of my friends that soda make persons sick, this is truth or not?",
   })
   @IsString()
+  @MinLength(3)
   description: string;
 
   @ApiPropertyOptional()
