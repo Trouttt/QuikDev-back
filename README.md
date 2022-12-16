@@ -47,7 +47,7 @@ $ yarn start:prod
 ## Env example
 
 ```NODE_ENV=development
-NEST_API_PORT=3012
+NEST_API_PORT=3000
 
 
 ### AWS S3
