@@ -44,18 +44,27 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+## Env example
 
-## Test
+```NODE_ENV=development
+NEST_API_PORT=3012
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+### AWS S3
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_S3_BUCKET_NAME=
 
-# test coverage
-$ npm run test:cov
+DB_CONNECTION=postgres
+#DB_HOST=postgres
+DB_HOST=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=courses@123
+DB_DATABASE=QUIKDEV
+DB_PORT=5432
+DB_SYNC=false
+DB_SSL=false
+DB_LOGGING=info
 ```
 
 ## Support
